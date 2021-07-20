@@ -1,0 +1,27 @@
+# How to edit:
+# Any line starting with a '#' character is a comment and won't be read by the mod
+# Add a '#' to the front of a line to disable it
+# Change value right of the equal sign (=) to set the stat to a different value
+
+# NOTE: max is 99
+level = 99
+hp = 99
+mp = 99
+ap = 99
+strength = 99
+defense = 99
+
+# NOTE: max is 8
+equipmentSlots = 8
+itemSlots = 8
+
+# NOTE: possible values: true, false
+magicUnlocked = true
+allWeapons = true
+allAbilities = true
+
+# NOTE: key items are not included as they can cause softlocks
+allItems = true
+
+# NOTE: max is 99999
+munny = 99999
