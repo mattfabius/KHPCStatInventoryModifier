@@ -10,6 +10,7 @@ This is a mod for Kingdom Hearts Final Mix for PC that allows easy editing of st
 ## How to Run the Mod (after installing)
 1. Launch Kingdom Hearts HD 1.5 + 2.5 ReMIX, then start Kingdom Hearts Final Mix
 2. Start a new game or load the save where you want to modify your stats and inventory
+3. Save your game in case you want to revert!
 3. Double-click LuaFrontend.exe in your LuaFrontend folder
 4. Under Games, make sure "Kingdom Hearts [GL]" is selected. Check the box next to KHPCStatInventoryModifier.
 5. From the top-left, click Engine > Start Engine.  Messages will appear in a LuaEngine Console window that confirm your stats have changed.  Enjoy!
