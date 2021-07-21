@@ -39,3 +39,38 @@ allWeapons|true, false|Setting this to "true" will give you 1 of each weapon inc
 allAbilities|true, false|Setting this to "true" will give Sora one of each ability including shared abilities.
 allItems|true, false|Setting this to "true" will give you 99 of each item EXCLUDING key/story items. Obtaining key items too early can cause softlocks.
 munny|0-99999
+
+## Challenges
+
+### Magic Build
+Play on Proud mode with EXP Zero enabled
+```
+mp = 99
+magicUnlocked = true
+```
+
+### Strength Build
+Play on Proud mode with EXP Zero enabled
+```
+strength = 99
+allAbilities = true
+```
+
+### Glass Jaw Build
+```
+level = 99
+hp = 2
+mp = 99
+ap = 99
+strength = 99
+defense = 1
+allAbilities = true
+```
+Enable Second Chance.
+
+### Ability Strategizing Build
+```
+ap = 10
+allAbilities = true
+```
+Enable EXP Zero. Select your abilities carefully.

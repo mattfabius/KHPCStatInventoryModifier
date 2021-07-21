@@ -261,7 +261,7 @@ local abilityAddr = {
     sharedAbilitySlotStart = 44325219,
     sharedAbilitySlotLast = 44325266,
     soraAbilitySlotStart = 44323854,
-    soraAbilitySlotLast = 44323880
+    soraAbilitySlotLast = 44323901
 }
 
 -- Built-in LuaBackend function called on startup
@@ -378,8 +378,14 @@ end
 
 function ApplySoraAbilities ()
     for i=0,23 do
-        WriteByte(abilityAddr.soraAbilitySlotStart+i,i+5)
+        WriteByte(abilityAddr.soraAbilitySlotStart+i,133+i)
     end
+
+    for i=0,9 do
+        WriteByte(abilityAddr.soraAbilitySlotStart+24+i,181+i)
+    end
+    WriteByte(abilityAddr.soraAbilitySlotStart+34,192)
+    WriteByte(abilityAddr.soraAbilitySlotStart+35,193)
 end
 
 function PrintInputSettings(settings)
