@@ -277,8 +277,12 @@ function _OnInit()
     end  
 end
 
+function _OnFrame()
+    --This is here just to silence the warnings about a missing _OnFrame function
+end
+
 function ReadInputFile()
-    local f = io.open("scripts/kh1gl/input.txt")
+    local f = io.open(SCRIPT_PATH .. "input.txt")
 	local settings = {}
 	while true do
 		local line = f:read("*l")
