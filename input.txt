@@ -3,13 +3,16 @@
 # Add a '#' to the front of a line to disable it
 # Change value right of the equal sign (=) to set the stat to a different value
 
-# NOTE: max is 99
-level = 99
-hp = 99
-mp = 99
-ap = 99
-strength = 99
-defense = 99
+sora = {
+# NOTE: max is 255
+level = 255
+hp = 255
+mp = 255
+
+# NOTE: max is 100
+ap = 100
+strength = 100
+defense = 100
 
 # NOTE: max is 8
 equipmentSlots = 8
@@ -19,9 +22,55 @@ itemSlots = 8
 magicUnlocked = true
 allWeapons = true
 allAbilities = true
+}
+
+shared = {
+# NOTE: possible values: true, false
+allAbilities = true
 
 # NOTE: key items are not included as they can cause softlocks
 allItems = true
 
-# NOTE: max is 99999
-munny = 99999
+# NOTE: max is 65535
+munny = 65535 
+}
+
+donald = {
+# NOTE: max is 255
+level = 255
+hp = 255
+mp = 255
+
+# NOTE: max is 100
+ap = 100
+strength = 100
+defense = 100
+
+# NOTE: max is 8
+equipmentSlots = 8
+itemSlots = 8
+
+# NOTE: possible values: true, false
+allWeapons = true
+allAbilities = true
+}
+
+goofy = {
+# NOTE: max is 255
+level = 255
+hp = 255
+mp = 255
+
+# NOTE: max is 100
+ap = 100
+strength = 100
+defense = 100
+
+# NOTE: max is 8
+equipmentSlots = 8
+itemSlots = 8
+
+# NOTE: possible values: true, false
+allWeapons = true
+allAbilities = true
+}

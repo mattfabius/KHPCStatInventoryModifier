@@ -13,8 +13,37 @@ local statAddr = {
     defense = 44323797,
     equipmentSlots = 44323814,
     itemSlots = 44323823,
-    magicUnlocked = 44323902,
+    magicUnlocked = 44323902
+}
+
+local sharedStatAddresses = {
     munny = 44414950
+}
+
+local donaldStatAddresses = {
+    level = 44323906,
+    currentHP = 44323907,
+    maxHP = 44323908,
+    currentMP = 44323909,
+    maxMP = 44323910,
+    ap = 44323911,
+    strength = 44323912,
+    defense = 44323913,
+    equipmentSlots = 44323930,
+    itemSlots = 44323939
+}
+
+local goofyStatAddresses = {
+    level = 44324022,
+    currentHP = 44324023,
+    maxHP = 44324024,
+    currentMP = 44324025,
+    maxMP = 44324026,
+    ap = 44324027,
+    strength = 44324028,
+    defense = 44324029,
+    equipmentSlots = 44324046,
+    itemSlots = 44324055
 }
 
 local itemAddr = {
@@ -224,7 +253,10 @@ local weaponAddr = {
     wishingStar = 44325062,
     ultimaWeapon = 44325063,
     diamondDust = 44325064,
-    oneWingedAngel = 44325065,
+    oneWingedAngel = 44325065
+}
+
+local donaldWeaponAddresses = {
     magesStaff = 44325066,
     morningStar = 44325067,
     shootingStar = 44325068,
@@ -239,7 +271,10 @@ local weaponAddr = {
     saveTheQueen = 44325077,
     wizardsRelic = 44325078,
     meteorStrike = 44325079,
-    fantasista = 44325080,
+    fantasista = 44325080
+}
+
+local goofyWeaponAddresses = {
     knightsShield = 44325082,
     mythrilShield = 44325083,
     onyxShield = 44325084,
@@ -257,12 +292,34 @@ local weaponAddr = {
     sevenElements = 44325096
 }
 
-local abilityAddr = {
-    sharedAbilitySlotStart = 44325219,
-    sharedAbilitySlotLast = 44325266,
-    soraAbilitySlotStart = 44323854,
-    soraAbilitySlotLast = 44323901
+local soraAddresses = {
+    stats = statAddr,
+    weapons = weaponAddr,
+    abilities = {start = 44323854, last = 44323901}
 }
+
+local donaldAddresses = {
+    stats = donaldStatAddresses,
+    weapons = donaldWeaponAddresses,
+    abilities = {start = 44323970, last = 44324000}
+}
+
+local goofyAddresses = {
+    stats = goofyStatAddresses,
+    weapons = goofyWeaponAddresses,
+    abilities = {start = 44324086, last = 44324116}
+}
+
+local sharedAddresses = {
+    stats = sharedStatAddresses,
+    items = itemAddr,
+    abilities = {start = 44325219, last = 44325266}
+}
+
+local soraAbilities = {133, 133, 134, 134, 134, 135, 135, 136, 136, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 152, 152, 153, 154, 155, 156, 181, 182, 183, 184, 185, 186, 187, 188, 188, 189, 190, 192, 193}
+local donaldAbilities = {154, 151, 152, 152, 153, 133, 133, 137, 155, 156} --berserk, mp haste, mp rage x2, second chance, treasure magnet x2, second wind, jackpot, lucky strike
+local goofyAbilities = {158, 155, 157, 133, 133, 159, 156, 160, 137, 153, 152, 152, 151, 154} --rocket, jackpot, charge, treasure magnet x2, tornado, lucky strike, mp gift, second wind, second chance, mp rage x2, mp haste, berserk
+local sharedAbilities = {1, 2, 3, 4}
 
 -- Built-in LuaBackend function called on startup
 function _OnInit()
@@ -270,11 +327,12 @@ function _OnInit()
 		ConsolePrint("Game detected")
         
         local settings = ReadInputFile()
-        PrintInputSettings(settings)
+        ConsolePrint("\nSettings parsed as:" .. PrintInputSettings(settings))
         ApplySettings(settings)
 	else
         ConsolePrint("Game not detected")
-    end  
+    end
+    ConsolePrint("Init Complete")
 end
 
 function _OnFrame()
@@ -283,9 +341,15 @@ end
 
 function ReadInputFile()
     local f = io.open(SCRIPT_PATH .. "input.txt")
+    local settings = ReadInputFileComplex(f)
+    f:close()
+    return settings
+end
+
+function ReadInputFileComplex(file)
 	local settings = {}
 	while true do
-		local line = f:read("*l")
+		local line = file:read("*l")
 		if not line then
 			break
         end
@@ -293,74 +357,94 @@ function ReadInputFile()
         if string.sub(line, 1, 1) == "#" then --comments
             goto continue
 		else
-            local _, _, key, operator, value = string.find(line, "([%a]+)%s*([<>=])%s*([%a%d]+)")
+            local _, _, key, operator, value = string.find(line, "([%a]+)%s*([<>=])%s*([{%a%d][%a%d]*)")
+            if value == '{' then
+                ConsolePrint("Reading object: " .. key)
+                value = ReadInputFileComplex(file)
+                ConsolePrint("Finished reading object: " .. key)
+            elseif string.find(line, '}') then
+                return settings
+            end
+
             if key then
-                settings[key] = {operator = operator, value = value}
+                --settings[key] = {operator = operator, value = value}
+                settings[key] = value
             end
 		end
         ::continue::
 	end
-	f:close()
 	return settings
 end
 
 function ApplySettings(settings)
-    ApplyStatNumberSetting(settings, "level")
-    ApplyStatNumberSetting(settings, "hp", 99, "maxHP", "currentHP")
-    ApplyStatNumberSetting(settings, "mp", 99, "maxMP", "currentMP")
-    ApplyStatNumberSetting(settings, "ap")
-    ApplyStatNumberSetting(settings, "strength")
-    ApplyStatNumberSetting(settings, "defense")
-    ApplyStatNumberSetting(settings, "equipmentSlots", 8)
-    ApplyStatNumberSetting(settings, "itemSlots", 8)
+    ConsolePrint("Applying Sora's stats...")
+    ApplySettingsPerCharacter(settings.sora, soraAddresses, soraAbilities)
+    ConsolePrint("Applying Donald's stats...")
+    ApplySettingsPerCharacter(settings.donald, donaldAddresses, donaldAbilities)
+    ConsolePrint("Applying Goofy's stats...")
+    ApplySettingsPerCharacter(settings.goofy, goofyAddresses, goofyAbilities)
+    ConsolePrint("Appling shared stats...")
+    ApplySettingsPerCharacter(settings.shared, sharedAddresses, sharedAbilities)
+end
 
-    if settings.magicUnlocked and settings.magicUnlocked.value == "true" then
-        WriteByte(statAddr.magicUnlocked, 255)
+function ApplySettingsPerCharacter(settings, addresses, abilities)
+    ApplyStatNumberSetting(settings, addresses, "level", 255)
+    ApplyStatNumberSetting(settings, addresses, "hp", 255, "maxHP", "currentHP")
+    ApplyStatNumberSetting(settings, addresses, "mp", 255, "maxMP", "currentMP")
+    ApplyStatNumberSetting(settings, addresses, "ap", 100)
+    ApplyStatNumberSetting(settings, addresses, "strength", 100)
+    ApplyStatNumberSetting(settings, addresses, "defense", 100)
+    ApplyStatNumberSetting(settings, addresses, "equipmentSlots", 8)
+    ApplyStatNumberSetting(settings, addresses, "itemSlots", 8)
+
+    if settings.magicUnlocked == "true" then
+        WriteByte(addresses.stats.magicUnlocked, 255)
         ConsolePrint("All magic unlocked")
     end
 
-    if settings.allItems and settings.allItems.value == "true" then
-        GiveAll (itemAddr, 99)
+    if addresses.items and settings.allItems == "true" then
+        GiveAll (addresses.items, 99)
         ConsolePrint("Gave all items")
     end
 
-    if settings.allWeapons and settings.allWeapons.value == "true" then
-        GiveAll (weaponAddr, 1)
+    if addresses.weapons and settings.allWeapons == "true" then
+        GiveAll (addresses.weapons, 1)
         ConsolePrint("Gave all weapons")
     end
 
-    if settings.allAbilities and settings.allAbilities.value == "true" then
-        ApplyAllAbilities ()
+    if addresses.abilities and settings.allAbilities == "true" then
+        --ApplyAllAbilities ()
+        ApplyAbilities(addresses.abilities, abilities)
         ConsolePrint("Applied all abilities")
     end
 
-    if settings.munny then
-        local munny = tonumber(settings.munny.value)
-        if munny > 99999 then
-            munny = 99999
+    if settings.munny and addresses.stats and addresses.stats.munny then
+        local munny = tonumber(settings.munny)
+        if munny > 65535 then
+            munny = 65535
         elseif munny < 0 then
             munny = 0
         end
 
-        WriteShort(statAddr.munny, munny)
+        WriteShort(addresses.stats.munny, munny)
         ConsolePrint("Changed munny to " .. munny)
     end
 end
 
-function ApplyStatNumberSetting(settings, key, max, statKey1, statKey2)
-    max = max or 99
+function ApplyStatNumberSetting(settings, addresses, key, max, statKey1, statKey2)
+    max = max or 255
     statKey1 = statKey1 or key
-    if settings[key] then
-        local value = tonumber(settings[key].value)
+    if settings[key] and addresses.stats then
+        local value = tonumber(settings[key])
         if value > max then
             value = max
         elseif value < 0 then
             value = 0
         end
-        WriteByte(statAddr[statKey1], value)
+        WriteByte(addresses.stats[statKey1], value)
         ConsolePrint("Changed " .. statKey1 .. " to " .. value)
         if statKey2 then
-            WriteByte(statAddr[statKey2], value)
+            WriteByte(addresses.stats[statKey2], value)
             ConsolePrint("Changed " .. statKey2 .. " to " .. value)
         end
     end
@@ -369,6 +453,16 @@ end
 function GiveAll (addresses, quantity)
     for key, address in pairs(addresses) do
         WriteByte(address, quantity)
+    end
+end
+
+function ApplyAbilities(addresses, abilities)
+    for index=1, #abilities do
+        if (addresses.start+index-1 > addresses.last) then
+            ConsolePrint("Tried to add too many abilities, some may have been cut off", 2)
+            break
+        end
+        WriteByte(addresses.start+index-1, abilities[index])
     end
 end
 
@@ -393,9 +487,15 @@ function ApplySoraAbilities ()
 end
 
 function PrintInputSettings(settings)
-    local msg = "\nSettings parsed as:"
+    print = print or false
+    local msg = ""
     for key, value in pairs(settings) do
-        msg = msg .. "\n" .. key .. value.operator .. value.value
+        if type(value) == "table" then
+            msg = msg .. "\n" .. key .. "=" .. "{" .. PrintInputSettings(value) .. "\n}"
+        else
+            msg = msg .. "\n" .. key .. "=" .. value
+        end
     end
-    ConsolePrint(msg)
+
+    return msg
 end
