@@ -1,6 +1,11 @@
 # KHPCStatInventoryModifier
 This is a mod for Kingdom Hearts Final Mix for PC that allows easy editing of stats, inventory, abilities, and more with an input text file.
 
+## What's New in v1.2?
+* Added support for modifying Donald and Goofy's stats, weapons, and abilities separately from Sora's
+* Fixed a bug where munny wasn't being properly applied
+* Increased limits for some stats
+
 ## How to Install
 1. Click the green "Code" button in the top-right and download as a zip file.
 2. Unzip the file (right-click > Extract All)
@@ -40,25 +45,34 @@ allWeapons|true, false|Setting this to "true" will give you 1 of each weapon inc
 allAbilities|true, false|Setting this to "true" will give Sora one of each ability including shared abilities.
 allItems|true, false|Setting this to "true" will give you 99 of each item EXCLUDING key/story items. Obtaining key items too early can cause softlocks.
 munny|0-99999
+sora|level, hp, mp, ap, strength, defense, equipmentSlots, itemSlots, magicUnlocked, allWeapons, allAbilities
+donald|level, hp, mp, ap, strength, defense, equipmentSlots, itemSlots, allWeapons, allAbilities
+goofy|level, hp, mp, ap, strength, defense, equipmentSlots, itemSlots, allWeapons, allAbilities
+shared|allItems, allAbilities, munny
 
 ## Challenges
 
 ### Magic Build
 Play on Proud mode with EXP Zero enabled
 ```
+sora = {
 mp = 99
 magicUnlocked = true
+}
 ```
 
 ### Strength Build
 Play on Proud mode with EXP Zero enabled
 ```
+sora = {
 strength = 99
 allAbilities = true
+}
 ```
 
 ### Glass Jaw Build
 ```
+sora = {
 level = 99
 hp = 2
 mp = 99
@@ -66,12 +80,15 @@ ap = 99
 strength = 99
 defense = 1
 allAbilities = true
+}
 ```
 Enable Second Chance.
 
 ### Ability Strategizing Build
 ```
+sora = {
 ap = 10
 allAbilities = true
+}
 ```
 Enable EXP Zero. Select your abilities carefully.
