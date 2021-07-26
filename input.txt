@@ -31,8 +31,8 @@ allAbilities = true
 # NOTE: key items are not included as they can cause softlocks
 allItems = true
 
-# NOTE: max is 65535
-munny = 65535 
+# NOTE: max is 99999
+munny = 99999
 }
 
 donald = {

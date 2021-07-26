@@ -420,13 +420,13 @@ function ApplySettingsPerCharacter(settings, addresses, abilities)
 
     if settings.munny and addresses.stats and addresses.stats.munny then
         local munny = tonumber(settings.munny)
-        if munny > 65535 then
-            munny = 65535
+        if munny > 99999 then
+            munny = 99999
         elseif munny < 0 then
             munny = 0
         end
 
-        WriteShort(addresses.stats.munny, munny)
+        WriteInt(addresses.stats.munny, munny)
         ConsolePrint("Changed munny to " .. munny)
     end
 end
